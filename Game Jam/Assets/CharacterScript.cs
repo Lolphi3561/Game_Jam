@@ -1,24 +1,33 @@
 using System.Threading;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
 public class CharacterScript : MonoBehaviour
 {
     // Allgemien
     public Rigidbody2D myRigidBody;
-    public float jumpPower = 10;
-    public int jumpCount = 2;
     public bool isAlive = true;
     public GameObject floorDeathBox;
     public Collision2D collision;
-
     private bool lastDirectionLeft = true;
+
+    // Springen
+    private int jumpsLeft = 0;
+    private bool isGrounded = false;
+    public float jumpPower = 10;
 
     // WallCling
     public PhysicsMaterial2D NoFriction;
     public PhysicsMaterial2D WallFriction;
     private Collider2D col;
+    public bool isOnWall = false;
+    public float wallJumpForceX = 8f;
+    public float wallJumpForceY = 10f;
+    private int wallDir = 0;
+
 
 
     // Dash
@@ -40,8 +49,6 @@ public class CharacterScript : MonoBehaviour
         Movement();
 
         Dash();
-
-        WallCling();
     }
 
     private void Movement()
@@ -53,10 +60,23 @@ public class CharacterScript : MonoBehaviour
             isAlive = true;
         }
 
-        if (Keyboard.current.spaceKey.wasPressedThisFrame && jumpCount >= 1)
+        if (Keyboard.current.spaceKey.wasPressedThisFrame && jumpsLeft > 0)
         {
-            myRigidBody.linearVelocityY = jumpPower;
-            jumpCount -= 1;
+            if (isOnWall)
+            {
+                myRigidBody.linearVelocity = new Vector2(
+                    wallJumpForceX * wallDir,
+                    wallJumpForceY
+                );
+
+                isOnWall = false;
+                col.sharedMaterial = NoFriction;
+            }
+            else
+            {
+                myRigidBody.linearVelocityY = jumpPower;
+            }
+            jumpsLeft--;
         }
 
         if (Keyboard.current.aKey.isPressed)
@@ -97,14 +117,7 @@ public class CharacterScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        foreach (ContactPoint2D contact in collision.contacts)
-        {
-            if (contact.normal.y > 0.5f)
-            {
-                jumpCount = 2;
-                break;
-            }
-        }
+        CheckGround(collision);
 
         if (collision.gameObject.CompareTag("DeathArea"))
         {
@@ -113,24 +126,47 @@ public class CharacterScript : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Wall"))
         {
-            myRigidBody.linearVelocityX = 0;
+            myRigidBody.linearVelocity = new Vector2(0, 0);
         }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if(isOnWall && Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            myRigidBody.linearVelocityX = 20;
+        }
+        WallCling(collision);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if(Keyboard.current.spaceKey.isPressed == false)
+        if (isOnWall)
         {
-            foreach (ContactPoint2D contact in collision.contacts)
+            isOnWall = false;
+            col.sharedMaterial = NoFriction;
+        }
+
+        if (isGrounded)
+        {
+            isGrounded = false;
+            jumpsLeft = 1;
+        }
+    }
+
+    private void CheckGround(Collision2D collision)
+    {
+        foreach (ContactPoint2D contact in collision.contacts)
+        {
+            if (contact.normal.y > 0.5f)
             {
-                if (contact.normal.y > 0.5f)
-                {
-                    jumpCount -= 1;
-                    break;
-                }
+                isGrounded = true;
+                jumpsLeft = 1;
+                return;
             }
         }
     }
+
 
     private void Dash()
     {
@@ -157,11 +193,20 @@ public class CharacterScript : MonoBehaviour
     {
         foreach (ContactPoint2D contact in collision.contacts)
         {
-            if (contact.normal.y == 0f)
+            if (Mathf.Abs(contact.normal.x) > 0.5f && contact.normal.y < 0.2f)
             {
+                isOnWall = true;
                 col.sharedMaterial = WallFriction;
-                jumpCount = 1;
-                break;
+                jumpsLeft = 1;
+
+                if(contact.normal.x > 0)
+                {
+                    wallDir = 1;
+                }
+                else
+                {
+                    wallDir = -1;
+                }
             }
         }
     }
