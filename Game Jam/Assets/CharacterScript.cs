@@ -21,7 +21,7 @@ public class CharacterScript : MonoBehaviour
     {
         if (isAlive == false)
         {
-            transform.position = new Vector3(0,10,1);
+            transform.position = new Vector3(0,8,1);
             isAlive = true;
         }
 
