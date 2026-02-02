@@ -9,6 +9,8 @@ public class CharacterScript : MonoBehaviour
     public bool isAlive = true;
     public Collider2D collisionCollider;
 
+    public bool hasDash = true;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -35,13 +37,10 @@ public class CharacterScript : MonoBehaviour
         {
             myRigidBody.linearVelocityX = 5;
         }
-    }
-
-    public bool DeathCauses()
-    {
-        if(gameObject.)
-
-        return isAlive;
+        if (Keyboard.current.shiftKey.isPressed)
+        {
+            Dash();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -55,5 +54,10 @@ public class CharacterScript : MonoBehaviour
         {
             jumpCount -= 1;
         }
+    }
+
+    private void Dash()
+    {
+
     }
 }
