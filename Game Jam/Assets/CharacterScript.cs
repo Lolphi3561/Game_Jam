@@ -11,6 +11,7 @@ public class CharacterScript : MonoBehaviour
     public Rigidbody2D myRigidBody;
     public bool isAlive = true;
     public GameObject floorDeathBox;
+    public GameObject respawnPoint;
     public Collision2D collision;
     public float speed = 7.3f;
     private int lastDirection = 0;
@@ -61,7 +62,9 @@ public class CharacterScript : MonoBehaviour
         // Totesfall
         if (isAlive == false)
         {
-            transform.position = new Vector3(0, 8, 1);
+            
+            transform.position = respawnPoint.transform.position;
+            transform.rotation = respawnPoint.transform.rotation;
             isAlive = true;
         }
 
