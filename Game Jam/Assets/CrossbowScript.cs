@@ -10,7 +10,7 @@ public class CrossbowScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        spawnArrow();
     }
 
     // Update is called once per frame
@@ -22,8 +22,13 @@ public class CrossbowScript : MonoBehaviour
         }
         else
         {
-            Instantiate(Arrow, transform.position, Quaternion.Euler(0f, 0f, 90f));
+            spawnArrow();
             timer = 0;
         }
+    }
+
+    void spawnArrow()
+    {
+        Instantiate(Arrow, transform.position, Arrow.transform.rotation);
     }
 }
