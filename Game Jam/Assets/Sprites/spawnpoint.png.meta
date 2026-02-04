@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d6e7761c72673ac48a8cfe041a6a5ce9
+guid: 5b82b6e675346fa4aa73ca6fa9cf02d1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -972397808153938236
-    second: dumbass_0
+      213: 4792117686105302229
+    second: spawnpoint_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dumbass_0
+      name: spawnpoint_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 6
-        width: 50
-        height: 84
+        x: 17
+        y: 16
+        width: 30
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4c6bd9078595182f0800000000000000
-      internalID: -972397808153938236
+      spriteID: 5d46c2255a5018240800000000000000
+      internalID: 4792117686105302229
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      dumbass_0: -972397808153938236
+      spawnpoint_0: 4792117686105302229
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

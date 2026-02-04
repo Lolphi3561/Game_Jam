@@ -141,6 +141,7 @@ public class CharacterScript : MonoBehaviour
             if (contact.normal.y > 0.5f)
             {
                 isGrounded = true;
+                isWallSliding = false;
                 jumpsLeft = 1;
                 return;
             }
