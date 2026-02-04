@@ -117,6 +117,7 @@ public class CharacterScript : MonoBehaviour
         if (collision.gameObject.CompareTag("DeathArea") || collision.gameObject.CompareTag("DeadlyProjectile"))
         {
             isAlive = false;
+            transform.SetParent(null);
         }
     }
 
