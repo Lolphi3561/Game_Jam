@@ -9,8 +9,8 @@ TagManager:
   - Crossbow
   - DeadlyProjectile
   - ArrowGroup
-  - NewLevelPlatform
   - NextLevelPlatform
+  - NextLevelTrigger
   layers:
   - Default
   - TransparentFX

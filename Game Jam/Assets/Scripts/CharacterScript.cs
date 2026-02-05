@@ -8,9 +8,10 @@ using UnityEngine.SceneManagement;
 
 public class CharacterScript : MonoBehaviour
 {
-    // Allgemien
+    // Allgemein
     public Rigidbody2D myRigidBody;
     public GameObject respawnPoint;
+    public Transform deathTrigger;
     public Collision2D collision;
     public float speed = 10f;
     private int lastDirection = 0;
@@ -40,6 +41,7 @@ public class CharacterScript : MonoBehaviour
 
     // Level
     private int level = 1;
+    private bool canMove = true;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -51,7 +53,10 @@ public class CharacterScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Movement();
+        if (canMove)
+        {
+            Movement();
+        }
 
         WallSlide();
         WallJump();
@@ -116,9 +121,21 @@ public class CharacterScript : MonoBehaviour
         if (collision.gameObject.CompareTag("NextLevelPlatform"))
         {
             level++;
-            if(level == 2)
+            canMove = false;
+            collision.collider.enabled = false;
+            deathTrigger.position = new Vector3(deathTrigger.position.x, deathTrigger.position.y-10, deathTrigger.position.z);
+            
+        }
+        if (collision.gameObject.CompareTag("NextLevelTrigger"))
+        {
+            canMove = true;
+            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(respawnPoint);
+            DontDestroyOnLoad(deathTrigger);
+            if (level == 2)
             {
                 SceneManager.LoadScene("Level2");
+                SceneManager.UnloadSceneAsync("Main");
             }
         }
     }
