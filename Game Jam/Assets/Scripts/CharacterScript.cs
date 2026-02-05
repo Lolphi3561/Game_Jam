@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
+using UnityEngine.SceneManagement;
 
 public class CharacterScript : MonoBehaviour
 {
@@ -13,7 +14,6 @@ public class CharacterScript : MonoBehaviour
     public Collision2D collision;
     public float speed = 10f;
     private int lastDirection = 0;
-    public Camera camera;
 
     // Springen
     private int jumpsLeft = 0;
@@ -38,12 +38,8 @@ public class CharacterScript : MonoBehaviour
     public float dashTimer = 0;
     public float dashBoost = 30;
 
-    // (Enter) Level
-    private bool isWaiting = false;
+    // Level
     private int level = 1;
-    private int levelChecker = 2;
-    public Transform deathFloor;
-    public Transform cealing;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -55,10 +51,7 @@ public class CharacterScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isWaiting)
-        {
-            Movement();
-        }
+        Movement();
 
         WallSlide();
         WallJump();
@@ -122,17 +115,11 @@ public class CharacterScript : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("NextLevelPlatform"))
         {
-            isWaiting = true;
             level++;
-            myRigidBody.linearVelocityX = 0;
-            collision.collider.enabled = false;
-            camera.transform.position = new Vector3(camera.transform.position.x, camera.transform.position.y - 10, camera.transform.position.z);
-            deathFloor.transform.position = new Vector3(deathFloor.transform.position.x, deathFloor.transform.position.y - 10, deathFloor.transform.position.z);
-        }
-        if (collision.gameObject.CompareTag("NewLevelPlatform"))
-        {
-            isWaiting = false;
-            LevelCheck();
+            if(level == 2)
+            {
+                SceneManager.LoadScene("Level2");
+            }
         }
     }
 
@@ -220,16 +207,6 @@ public class CharacterScript : MonoBehaviour
         {
             myRigidBody.linearVelocityX = dashBoost * lastDirection;
             dashTimer = 0;
-        }
-    }
-
-    private void LevelCheck()
-    {
-        if(level == levelChecker)
-        {
-            cealing.transform.position = new Vector3(cealing.transform.position.x, cealing.transform.position.y - 10, cealing.transform.position.z);
-            respawnPoint.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
-            levelChecker++;
         }
     }
 }

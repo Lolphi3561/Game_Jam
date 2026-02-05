@@ -27,9 +27,5 @@ public class deadlyArrowScript : MonoBehaviour
         {
             Destroy(transform.root.gameObject);
         }
-        else
-        {
-            Debug.Log("aaaa");
-        }
     }
 }
